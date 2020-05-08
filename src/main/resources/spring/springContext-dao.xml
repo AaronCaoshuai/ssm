@@ -34,6 +34,7 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!--配置数据源-->
         <property name="dataSource" ref="dataSource"/>
+        <!--指定扫描的*Mapper文件的位置-->
         <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
     </bean>
 

@@ -175,7 +175,7 @@
 
 
     <build>
-        <!--扫描配置文件-->
+       <!-- &lt;!&ndash;扫描配置文件&ndash;&gt;
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -193,7 +193,7 @@
                 </includes>
                 <filtering>false</filtering>
             </resource>
-        </resources>
+        </resources>-->
         <!--插件配置-->
         <plugins>
             <!-- 配置Maven的JDK编译级别 -->

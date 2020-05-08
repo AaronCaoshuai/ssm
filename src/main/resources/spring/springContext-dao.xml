@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        ">
+
+    <!--spring整合持久层的思路
+    1.配置数据源,由spring进行管理 不同数据源提供了对于DataSource的不同实现,需要指定不同的类,此处引入了外部配置文件db.properties文件
+    2.配置SqlSessionFactory由spring管理,由于SqlSessionFactory是单例的,使用spring进行管理,使用的类是mybatis和spring的整合包中的类
+    3.配置Mapper代理对象由spring进行管理,Mapper代理对象需要配置扫描器进行扫描加载-->
+
+
+    <!--加载db.properties文件-->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <!--配置dbcp数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+        <property name="maxActive" value="30"/>
+        <property name="maxIdle" value="5"/>
+    </bean>
+
+    <!--下面配置的SqlSessionFactory和MapperScannerConfigurer都是Mybatis提供的和spring的整合包里面的类-->
+    <!--配置SqlSessionFactory 相当于Mybatis中的配置文件,可以配置Mybatis的各种配置
+    包括别名配置,是否开启延迟加载,插件配置等
+    -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--配置数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
+    </bean>
+
+    <!--配置mapper扫描器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--指定扫描包-->
+        <property name="basePackage" value="com.aaron.mapper"/>
+    </bean>
+
+</beans>

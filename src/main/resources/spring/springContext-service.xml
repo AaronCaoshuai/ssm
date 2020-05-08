@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--业务层整合思路
+    1.配置业务层扫描
+    2.配置事务相关操作,使用aop进行控制-->
+
+    <!--配置Service扫描-->
+    <context:component-scan base-package="com.aaron.service"/>
+
+    <!--配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置事务管理器的通知-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+            <tx:attributes>
+                <!--配置传播行为 对于非查询配置为REQUIRED,查询配置为只读属性-->
+                <tx:method name="save*" propagation="REQUIRED" />
+                <tx:method name="add*" propagation="REQUIRED" />
+                <tx:method name="insert*" propagation="REQUIRED" />
+                <tx:method name="delete*" propagation="REQUIRED" />
+                <tx:method name="del*" propagation="REQUIRED" />
+                <tx:method name="remove*" propagation="REQUIRED" />
+                <tx:method name="update*" propagation="REQUIRED" />
+                <tx:method name="modify*" propagation="REQUIRED" />
+                <tx:method name="find*" read-only="true" />
+                <tx:method name="query*" read-only="true" />
+                <tx:method name="select*" read-only="true" />
+                <tx:method name="get*" read-only="true" />
+            </tx:attributes>
+    </tx:advice>
+
+    <!--配置事务aop切入点-->
+    <aop:config>
+        <!--execution规则,按照方法的全限定写法配合通配符进行配置-->
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* *..*.*ServiceImpl.*(..))"/>
+    </aop:config>
+
+    <import resource="springContext-dao.xml"/>
+
+
+</beans>

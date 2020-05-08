@@ -34,7 +34,7 @@ springContext-dao.xml
 
 springContext-service.xml
 
-springmvc.xml
+springContext-mvc.xml
 
 web.xml
 
